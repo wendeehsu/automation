@@ -122,25 +122,27 @@ while True:
     Gotcha_near = 360  # y pos
     view_width = 480
     view_length = 640
-    
     # Check the x axis of center of ball if it is near the right side
     if center is None:
-        ser.write("S".encode('utf-8'))
-        time.sleep(1)
+        continue
     elif center[0] > Gotcha_pos_right:
-        ser.write("R".encode('utf-8'))
-        print("R")
-    # Check if it is near left side
-    elif center[0] < Gotcha_pos_left:
         ser.write("L".encode('utf-8'))
         print("L")
-    elif (center[0] >= Gotcha_pos_left) and (center[0] <= Gotcha_pos_right):
+        time.sleep(1)
+    # Check if it is near left side
+    elif center[0] < Gotcha_pos_left:
+        ser.write("R".encode('utf-8'))
+        print("R")
+        time.sleep(1)
+    
+    """
+    elif center[0] >= Gotcha_pos_left and center[0] <= Gotcha_pos_right:
         ser.write("G".encode('utf-8'))
         if center[1] >= Gotcha_near:
             ser.write("G".encode('utf-8'))
             ser.write("O".encode('utf-8'))
             break
-
+    """
     key = cv2.waitKey(1) & 0xFF
     if center is not None:
         print("Center: {}, Radius: {}".format(center, radius))

@@ -126,15 +126,12 @@ while True:
     if center is None:
         continue
     elif center[0] > Gotcha_pos_right:
-        ser.write("L".encode('utf-8'))
-        print("L")
-        time.sleep(1)
-    # Check if it is near left side
-    elif center[0] < Gotcha_pos_left:
         ser.write("R".encode('utf-8'))
         print("R")
-        time.sleep(1)
-    
+    # Check if it is near left side
+    elif center[0] < Gotcha_pos_left:
+        ser.write("L".encode('utf-8'))
+        print("L")
     """
     elif center[0] >= Gotcha_pos_left and center[0] <= Gotcha_pos_right:
         ser.write("G".encode('utf-8'))

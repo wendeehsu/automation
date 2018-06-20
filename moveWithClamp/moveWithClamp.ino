@@ -55,8 +55,8 @@ void pause(){
 
 void move(bool R, bool L,int t){
   for(int i=0; i<t;i++){
-    //servoControlRIGHT(R);
-    //servoControlLEFT(L);
+    servoControlRIGHT(R);
+    servoControlLEFT(L);
     delay(10);
   }
 }
@@ -129,16 +129,16 @@ void loop() {
     Serial.print(distanceL);
     //Serial.print("Right distance = ");
     //Serial.println(distanceR);
-    int d = 25;
+    int d = 8;
     move(true, true, t);
-    if ((distanceL-distanceR) > d && distanceR < d){
+    if (distanceL< 2*d || distanceR < d){
       Serial.print("L\n");
       Serial.print(distanceL-distanceR);
       R = true;
       L = false;
       move(R, L, t);
     }
-    else if ((distanceR-distanceL) > d && distanceL < d){
+    else if (distanceL < d || distanceR < 2*d){
       Serial.print("R\n");
       R = false;
       L = true;

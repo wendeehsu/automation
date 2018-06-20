@@ -126,11 +126,11 @@ while True:
     if center is None:
         continue
     elif center[0] > Gotcha_pos_right:
-        ser.write("R".encode('utf-8'))
+        ser.write("R".encode())
         print("R")
     # Check if it is near left side
     elif center[0] < Gotcha_pos_left:
-        ser.write("L".encode('utf-8'))
+        ser.write("L".encode())
         print("L")
     """
     elif center[0] >= Gotcha_pos_left and center[0] <= Gotcha_pos_right:
@@ -148,7 +148,7 @@ while True:
         break
 
 print("Terminated")
-ser.write("S".encode('utf-8'))
+ser.write("S".encode())
 
 # cleanup the camera and close any open windows
 camera.release()

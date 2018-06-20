@@ -75,7 +75,7 @@ void setup() {
     delay(20);
 }
 
-int cases = 2; //1: looking for ball, 2: facing obstacles
+int cases = 1; //1: looking for ball, 2: facing obstacles
 void loop() {
   if(cases == 1){
     int t = 10;

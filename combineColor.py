@@ -7,7 +7,7 @@ import cv2
 import pymysql
 import time
 import serial
-ser = serial.Serial('/dev/ttyUSB0', 9600)
+ser = serial.Serial('/dev/myserial', 9600)
 
 
 class color:

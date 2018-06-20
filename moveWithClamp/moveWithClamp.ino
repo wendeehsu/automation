@@ -55,8 +55,8 @@ void pause(){
 
 void move(bool R, bool L,int t){
   for(int i=0; i<t;i++){
-    //servoControlRIGHT(R);
-    //servoControlLEFT(L);
+    servoControlRIGHT(R);
+    servoControlLEFT(L);
     delay(10);
   }
 }

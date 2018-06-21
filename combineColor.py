@@ -40,7 +40,7 @@ args = vars(ap.parse_args())
 # ball in the HSV color space, then initialize the list of tracked points
 #get the intended color
 
-a, b = input("Enter : Color of ball and paper").split(" ")
+a, b = input("Enter : Color of ball and paper\n").split(" ")
 
 pts = deque(maxlen=args["buffer"])
 

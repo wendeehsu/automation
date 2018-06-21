@@ -130,7 +130,8 @@ while True:
     view_length = 640
     # Check the x axis of center of ball if it is near the right side
     if center is None:
-        continue
+        ser.write("R".encode('utf-8'))
+        print("R")
     elif center[0] > Gotcha_pos_right:
         ser.write("R".encode('utf-8'))
         print("R")

@@ -1,6 +1,6 @@
-#include <Servo.h>
 #include <Ultrasonic.h>
 
+#include <Servo.h>
 Servo myservo;  // create servo object to control a servo
 Ultrasonic ultrasonicR(12,13);
 Ultrasonic ultrasonicL(10,11);
@@ -75,7 +75,7 @@ void setup() {
     delay(20);
 }
 
-int cases = 1; //1: looking for ball, 2: facing obstacles
+int cases = 2; //1: looking for ball, 2: facing obstacles
 void loop() {
   if(cases == 1){
     int t = 10;
@@ -123,8 +123,8 @@ void loop() {
   }
   else if(cases == 2){
     int t = 30;
-    distanceL = ultrasonicL.distanceRead();
-    distanceR = ultrasonicR.distanceRead();
+    distanceL = ultrasonicL.Ranging(CM);
+    distanceR = ultrasonicR.Ranging(CM);
     Serial.print("Left distance = ");
     Serial.print(distanceL);
     //Serial.print("Right distance = ");

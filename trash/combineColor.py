@@ -7,7 +7,8 @@ import cv2
 import pymysql
 import time
 import serial
-ser = serial.Serial('/dev/ttyUSB1', 9600)
+ser = serial.Serial('/dev/ttyUSB0', 9600)
+#ser1 = serial.Serial('/dev/ttyUSB1', 9600)
 
 
 class color:
@@ -17,11 +18,11 @@ class color:
 
 
 #define the colors' upper and lower bound
-Red = color((170, 50, 50), (210, 255, 255))
-Yellow = color((10, 50, 100), (30, 255, 255))
-Green = color((50, 10, 70), (70, 255, 255))
-Blue = color((90, 100, 100), (130, 255, 255))
-Purple = color((150, 40, 60), (170, 255, 180))
+Red = color((170, 100, 100), (190, 255, 255))
+Yellow = color((10, 140, 100), (30, 255, 255))
+Green = color((50, 100, 100), (70, 255, 255))
+Blue = color((90, 150, 150), (130, 255, 255))
+Purple = color((80, 80, 60), (255, 255, 180))
 colorArray = {
     'red': Red,
     'yellow': Yellow,
@@ -53,6 +54,8 @@ else:
 # keep looping
 while True:
     # grab the current frame
+    print("ser",ser)
+    #print("ser1",ser1)
     (grabbed, frame) = camera.read()
 
     # if we are viewing a video and we did not grab a frame,
@@ -117,8 +120,8 @@ while True:
     # Find the position of ball in the view of camera
     # the x position of catching ball is 269~309
     # the y position of catching ball is 360
-    Gotcha_pos_left = 240  # x pos
-    Gotcha_pos_right = 400  # x pos
+    Gotcha_pos_left = 269  # x pos
+    Gotcha_pos_right = 309  # x pos
     Gotcha_near = 360  # y pos
     view_width = 480
     view_length = 640
@@ -126,34 +129,31 @@ while True:
     if center is None:
         continue
     elif center[0] > Gotcha_pos_right:
-        ser.write("R".encode('utf-8'))
+        ser.write("R".encode())
         print("R")
     # Check if it is near left side
     elif center[0] < Gotcha_pos_left:
-        ser.write("L".encode('utf-8'))
+        ser.write("L".encode())
         print("L")
-        
+    """
     elif center[0] >= Gotcha_pos_left and center[0] <= Gotcha_pos_right:
         ser.write("G".encode('utf-8'))
-        print("G")
         if center[1] >= Gotcha_near:
             ser.write("G".encode('utf-8'))
-            print("G")
-            ser.write("G".encode('utf-8'))
-            print("G")
             ser.write("O".encode('utf-8'))
-            print("O")
             break
-        
+    """
     key = cv2.waitKey(1) & 0xFF
     if center is not None:
         print("Center: {}, Radius: {}".format(center, radius))
+        print("ser",ser)
+
     # if the 'q' key is pressed, stop the loop
     if key == ord("q"):
         break
 
 print("Terminated")
-ser.write("S".encode('utf-8'))
+ser.write("S".encode())
 
 # cleanup the camera and close any open windows
 camera.release()

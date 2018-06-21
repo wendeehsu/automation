@@ -7,7 +7,7 @@ import cv2
 import pymysql
 import time
 import serial
-ser = serial.Serial('/dev/ttyUSB1', 9600)
+ser = serial.Serial('/dev/ttyUSB0', 9600)
 
 
 class color:
@@ -117,14 +117,16 @@ while True:
     # Find the position of ball in the view of camera
     # the x position of catching ball is 269~309
     # the y position of catching ball is 360
-    Gotcha_pos_left = 240  # x pos
-    Gotcha_pos_right = 400  # x pos
+    Gotcha_pos_left = 269  # x pos
+    Gotcha_pos_right = 309  # x pos
     Gotcha_near = 360  # y pos
     view_width = 480
     view_length = 640
+    
     # Check the x axis of center of ball if it is near the right side
     if center is None:
-        continue
+        ser.write("S".encode('utf-8'))
+        time.sleep(1)
     elif center[0] > Gotcha_pos_right:
         ser.write("R".encode('utf-8'))
         print("R")
@@ -132,19 +134,13 @@ while True:
     elif center[0] < Gotcha_pos_left:
         ser.write("L".encode('utf-8'))
         print("L")
-        
-    elif center[0] >= Gotcha_pos_left and center[0] <= Gotcha_pos_right:
+    elif (center[0] >= Gotcha_pos_left) and (center[0] <= Gotcha_pos_right):
         ser.write("G".encode('utf-8'))
-        print("G")
         if center[1] >= Gotcha_near:
             ser.write("G".encode('utf-8'))
-            print("G")
-            ser.write("G".encode('utf-8'))
-            print("G")
             ser.write("O".encode('utf-8'))
-            print("O")
             break
-        
+
     key = cv2.waitKey(1) & 0xFF
     if center is not None:
         print("Center: {}, Radius: {}".format(center, radius))

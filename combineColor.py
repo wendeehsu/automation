@@ -40,9 +40,7 @@ args = vars(ap.parse_args())
 # ball in the HSV color space, then initialize the list of tracked points
 #get the intended color
 
-
-a, b = input("Enter : ").split(" ")
-target_color = {a, b}
+a, b = input("Enter : Color of ball and paper").split(" ")
 
 pts = deque(maxlen=args["buffer"])
 
@@ -57,7 +55,6 @@ else:
 
 # keep looping
 while True:
-    
     # grab the current frame
     (grabbed, frame) = camera.read()
 
@@ -139,7 +136,7 @@ while True:
     elif center[0] < Gotcha_pos_left:
         ser.write("L".encode('utf-8'))
         print("L")
-        
+
     elif center[0] >= Gotcha_pos_left and center[0] <= Gotcha_pos_right:
         ser.write("G".encode('utf-8'))
         print("G")
@@ -150,8 +147,9 @@ while True:
             print("G")
             ser.write("O".encode('utf-8'))
             print("O")
-            
-        
+            a = b
+            print("Go to client's address!!")
+
     key = cv2.waitKey(1) & 0xFF
     if center is not None:
         print("Center: {}, Radius: {}".format(center, radius))

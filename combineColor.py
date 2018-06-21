@@ -39,7 +39,11 @@ args = vars(ap.parse_args())
 
 # ball in the HSV color space, then initialize the list of tracked points
 #get the intended color
-a = input()
+
+
+a, b = input("Enter : ").split(" ")
+target_color = {a, b}
+
 pts = deque(maxlen=args["buffer"])
 
 # if a video path was not supplied, grab the reference
@@ -53,6 +57,7 @@ else:
 
 # keep looping
 while True:
+    
     # grab the current frame
     (grabbed, frame) = camera.read()
 
@@ -144,7 +149,7 @@ while True:
             print("G")
             ser.write("O".encode('utf-8'))
             print("O")
-            break
+            
         
     key = cv2.waitKey(1) & 0xFF
     if center is not None:
@@ -152,9 +157,6 @@ while True:
     # if the 'q' key is pressed, stop the loop
     if key == ord("q"):
         break
-
-print("Terminated")
-ser.write("S".encode('utf-8'))
 
 # cleanup the camera and close any open windows
 camera.release()

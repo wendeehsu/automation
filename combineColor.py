@@ -8,7 +8,7 @@ import pymysql
 import time
 import serial
 
-ser = serial.Serial('/dev/ttyUSB0', 9600)
+ser = serial.Serial('/dev/ttyUSB1', 9600)
 
 
 class color:
@@ -20,7 +20,7 @@ class color:
 #define the colors' upper and lower bound
 Red = color((170, 50, 50), (210, 255, 255))
 Yellow = color((10, 50, 100), (30, 255, 255))
-Green = color((50, 10, 70), (70, 255, 255))
+Green = color((50, 50, 130), (90, 255, 255))
 Blue = color((90, 100, 100), (130, 255, 255))
 Purple = color((150, 40, 60), (170, 255, 180))
 colorArray = {

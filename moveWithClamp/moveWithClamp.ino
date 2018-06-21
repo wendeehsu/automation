@@ -7,13 +7,8 @@ Ultrasonic ultrasonicL(10,11);
 
 int servoRIGHT =5;
 int servoLEFT = 9;
-int Full = 10;
-int Medium = 60;
-int Slow = 80;
-int VerySlow = 100;
 bool R = false;
 bool L = false;
-String str;
 int distanceL;
 int distanceR;
 
@@ -24,21 +19,20 @@ void servoControlRIGHT(bool R){
     delayMicroseconds(1000);  //move front
     digitalWrite(servoRIGHT, LOW);
   }
-  if (R == false)
-  {
+  else{
     digitalWrite(servoRIGHT, HIGH);
     delayMicroseconds(2000); //move back
     digitalWrite(servoRIGHT, LOW);
   }
-  
 }
+
 void servoControlLEFT(bool L){
   if (L == true){
     digitalWrite(servoLEFT, HIGH);
     delayMicroseconds(2000);
     digitalWrite(servoLEFT, LOW);
   }
-  if (L == false){
+  else{
     digitalWrite(servoLEFT, HIGH);
     delayMicroseconds(1000);
     digitalWrite(servoLEFT, LOW);
@@ -75,8 +69,8 @@ void setup() {
     delay(20);
 }
 
-int cases = 2; //1: looking for ball, 2: facing obstacles
-void loop() {
+int cases = 1; //1: looking for ball, 2: facing obstacles, 3: remote control
+void loop(){
   if(cases == 1){
     int t = 10;
     if (Serial.available() > 0){
@@ -99,7 +93,7 @@ void loop() {
         Serial.println("turn left");
         L = false;
         R = true;
-        move(R, L,t);        
+        move(R, L, t);        
       }
       else if(s == 82){ //"R"
         Serial.println("turn right");
@@ -123,22 +117,29 @@ void loop() {
   }
   else if(cases == 2){
     int t = 30;
+<<<<<<< HEAD
     distanceL = ultrasonicL.Ranging(CM);
     distanceR = ultrasonicR.Ranging(CM);
+=======
+    myservo.write(180);
+    distanceL = ultrasonicL.distanceRead();
+    distanceR = ultrasonicR.distanceRead();
+>>>>>>> origin/remoteControl
     Serial.print("Left distance = ");
     Serial.print(distanceL);
-    //Serial.print("Right distance = ");
-    //Serial.println(distanceR);
-    int d = 25;
+    Serial.print("Right distance = ");
+    Serial.println(distanceR);
+    
+    int d = 8;
     move(true, true, t);
-    if ((distanceL-distanceR) > d && distanceR < d){
+    if (distanceL< 2*d || distanceR < d){
       Serial.print("L\n");
       Serial.print(distanceL-distanceR);
       R = true;
       L = false;
       move(R, L, t);
     }
-    else if ((distanceR-distanceL) > d && distanceL < d){
+    else if (distanceL < d || distanceR < 2*d){
       Serial.print("R\n");
       R = false;
       L = true;
@@ -155,7 +156,9 @@ void loop() {
       Serial.print("F\n");
       R = true;
       L = true;
+      move(R,L,t);
     }
   }
 }
+
 

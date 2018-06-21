@@ -6,9 +6,65 @@ import imutils
 import cv2
 import pymysql
 import time
-import serial
+import RPi.GPIO as GPIO
 
-ser = serial.Serial('/dev/ttyUSB1', 9600)
+GPIO.setmode(GPIO.BOARD)
+pin = [11, 13, 15]
+for i in pin:
+    GPIO.setup(i, GPIO.OUT)
+def S():
+    GPIO.output(pin[0],GPIO.LOW)
+    GPIO.output(pin[1],GPIO.LOW)
+    GPIO.output(pin[2],GPIO.LOW)
+    print("S")
+    
+def G():
+    GPIO.output(pin[0],GPIO.HIGH)
+    GPIO.output(pin[1],GPIO.LOW)
+    GPIO.output(pin[2],GPIO.LOW)
+    time.sleep(1)
+    print("G")
+    S()
+    
+def B():
+    GPIO.output(pin[0],GPIO.LOW)
+    GPIO.output(pin[1],GPIO.HIGH)
+    GPIO.output(pin[2],GPIO.LOW)
+    time.sleep(1)
+    print("B")
+    S()
+    
+def L():
+    GPIO.output(pin[0],GPIO.HIGH)
+    GPIO.output(pin[1],GPIO.HIGH)
+    GPIO.output(pin[2],GPIO.LOW)
+    time.sleep(1)
+    print("L")
+    S()
+
+def R():
+    GPIO.output(pin[0],GPIO.LOW)
+    GPIO.output(pin[1],GPIO.LOW)
+    GPIO.output(pin[2],GPIO.HIGH)
+    time.sleep(1)
+    print("R")
+    S()
+    
+def O():
+    GPIO.output(pin[0],GPIO.HIGH)
+    GPIO.output(pin[1],GPIO.LOW)
+    GPIO.output(pin[2],GPIO.HIGH)
+    time.sleep(1)
+    print("O")
+    S()
+
+def C():
+    GPIO.output(pin[0],GPIO.LOW)
+    GPIO.output(pin[1],GPIO.HIGH)
+    GPIO.output(pin[2],GPIO.HIGH)
+    time.sleep(1)
+    print("C")
+    S()
 
 
 class color:
@@ -127,26 +183,18 @@ while True:
     view_length = 640
     # Check the x axis of center of ball if it is near the right side
     if center is None:
-        ser.write("R".encode('utf-8'))
-        print("R")
+        R()
     elif center[0] > Gotcha_pos_right:
-        ser.write("R".encode('utf-8'))
-        print("R")
+        R()
     # Check if it is near left side
     elif center[0] < Gotcha_pos_left:
-        ser.write("L".encode('utf-8'))
-        print("L")
-
+        L()
     elif center[0] >= Gotcha_pos_left and center[0] <= Gotcha_pos_right:
-        ser.write("G".encode('utf-8'))
-        print("G")
+        G()
         if center[1] >= Gotcha_near:
-            ser.write("G".encode('utf-8'))
-            print("G")
-            ser.write("G".encode('utf-8'))
-            print("G")
-            ser.write("O".encode('utf-8'))
-            print("O")
+            G()
+            G()
+            O()
             a = b
             print("Go to client's address!!")
 

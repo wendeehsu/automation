@@ -45,6 +45,7 @@ void pause(){
   delayMicroseconds(1500);
   digitalWrite(servoLEFT, LOW);
   digitalWrite(servoRIGHT, LOW);
+  delay(200);
 }
 
 void move(bool R, bool L,int t){

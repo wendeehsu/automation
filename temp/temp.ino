@@ -138,7 +138,7 @@ void loop(){
         if(cases == 2 && ultraControl(t1)){
             ;
         }else{
-            move(R, L, t);        
+            move(R, L, t-5);        
         }
     }
     else if(a0 == 0 && a1 == 0 && a2 == 1){ //"R"
@@ -148,7 +148,7 @@ void loop(){
         if(cases == 2 && ultraControl(t1)){
             ;
         }else{
-            move(R, L, t);        
+            move(R, L, t-5);        
         }
     }
     else if(a0 == 1 && a1 == 0 && a2 == 0){ //"G"

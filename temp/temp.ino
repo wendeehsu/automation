@@ -170,7 +170,7 @@ void loop(){
     else if(a0 == 0 && a1 == 0 && a2 == 0){ //"S"
         Serial.println("stop");
         pause();
-        L = false;
-        R = false;
+        //L = false;
+        //R = false;
     }
 }

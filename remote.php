@@ -9,7 +9,7 @@ if (!$link) {
 	exit;
 }
 
-#remote.php?move=1&clamp=0
+#remote.php?move=&clamp=0
 
 $move_no=$_GET["move"];
 $clamp_no=$_GET["clamp"];
@@ -21,8 +21,9 @@ echo ($clamp_no);
 $query = "UPDATE remote SET Direction = $move_no, Clamp = $clamp_no";
 $result = mysqli_query($link,$query) or trigger_error("Error ". mysqli_error($link));
 
-$sent = "SELECT send_status FROM remote";
-$result = mysqli_query($link, $sent) or trigger_error("Error" . mysqli_error($link));
+echo($result);
+echo "type of move_no=" . gettype($move_no) . "type of clamp_no= " . gettype($clamp_no);
+
 $row = mysqli_fetch_row($result);
 if($row[0]){
     echo "    remote delivered";

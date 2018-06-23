@@ -62,5 +62,6 @@ select*from Client_info;    //列出這裡面的資料
 ### 影片
 
 ## 連結
+- [Code put on Github](https://github.com/wendeehsu/automation/tree/KuanChia) [target=_blank]
 - [Google Drive](https://drive.google.com/drive/folders/19G1_y2-w5ZWjCCUGehISzWitYYJUy2Mi?usp=sharing) [target=_blank]
 - [Circle Detection in Real time](https://github.com/ShubhamCpp/Circle-Detection-in-Real-Time) [target=_blank]

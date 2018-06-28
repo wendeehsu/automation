@@ -6,8 +6,98 @@ import imutils
 import cv2
 import pymysql
 import time
-import serial
-ser = serial.Serial('/dev/ttyUSB0', 9600)
+import RPi.GPIO as GPIO
+
+# Read db
+db = pymysql.connect("localhost", "newuser1", "lab301", "newdb2")
+cursor = db.cursor()
+row = []
+
+read = True
+while read:
+    time.sleep(1)  #wait for 1 second
+    cursor.execute("SELECT color, id FROM Client_info WHERE color != 0")
+    row = cursor.fetchone()
+    db.commit()
+    if row is not None:
+        read = False
+        print(row[0], row[1])
+
+id_color = {1: "red", 2: "yellow", 3: "green", 4: "purple", 5: "blue"}
+ball_color = {1: "red", 2: "yellow", 3: "green", 4: "blue", 5: "purple"}
+
+a = ball_color[row[0]]
+b = id_color[row[1]]
+print(ball_color[row[0]], id_color[row[1]])
+
+
+# GPIO setup
+GPIO.setmode(GPIO.BOARD)
+pin = [11, 13, 15]
+for i in pin:
+    GPIO.setup(i, GPIO.OUT)
+
+
+def S():
+    GPIO.output(pin[0], GPIO.LOW)
+    GPIO.output(pin[1], GPIO.LOW)
+    GPIO.output(pin[2], GPIO.LOW)
+    print("S")
+    time.sleep(7)
+
+
+def G():
+    GPIO.output(pin[0], GPIO.HIGH)
+    GPIO.output(pin[1], GPIO.LOW)
+    GPIO.output(pin[2], GPIO.LOW)
+    time.sleep(1)
+    print("G")
+    
+
+
+def B():
+    GPIO.output(pin[0], GPIO.LOW)
+    GPIO.output(pin[1], GPIO.HIGH)
+    GPIO.output(pin[2], GPIO.LOW)
+    time.sleep(1)
+    print("B")
+
+
+def L():
+    GPIO.output(pin[0], GPIO.HIGH)
+    GPIO.output(pin[1], GPIO.HIGH)
+    GPIO.output(pin[2], GPIO.LOW)
+    time.sleep(1)
+    print("L")
+    S()
+
+
+def R():
+    GPIO.output(pin[0], GPIO.LOW)
+    GPIO.output(pin[1], GPIO.LOW)
+    GPIO.output(pin[2], GPIO.HIGH)
+    time.sleep(1)
+    print("R")
+    S()
+    
+
+
+def O():
+    GPIO.output(pin[0], GPIO.HIGH)
+    GPIO.output(pin[1], GPIO.LOW)
+    GPIO.output(pin[2], GPIO.HIGH)
+    time.sleep(1)
+    print("O")
+    S()
+
+
+def C():
+    GPIO.output(pin[0], GPIO.LOW)
+    GPIO.output(pin[1], GPIO.HIGH)
+    GPIO.output(pin[2], GPIO.HIGH)
+    time.sleep(1)
+    print("C")
+    S()
 
 
 class color:
@@ -17,11 +107,11 @@ class color:
 
 
 #define the colors' upper and lower bound
-Red = color((170, 100, 100), (190, 255, 255))
-Yellow = color((10, 140, 100), (30, 255, 255))
-Green = color((50, 100, 100), (70, 255, 255))
-Blue = color((90, 150, 150), (130, 255, 255))
-Purple = color((80, 80, 60), (255, 255, 180))
+Red = color((170, 50, 50), (210, 255, 255))
+Yellow = color((10, 50, 100), (30, 255, 255))
+Green = color((50, 50, 130), (90, 255, 255))
+Blue = color((90, 100, 100), (130, 255, 255))
+Purple = color((150, 40, 60), (170, 255, 180))
 colorArray = {
     'red': Red,
     'yellow': Yellow,
@@ -38,7 +128,9 @@ args = vars(ap.parse_args())
 
 # ball in the HSV color space, then initialize the list of tracked points
 #get the intended color
-a = input()
+
+#a, b = input("Enter : Color of ball and paper\n").split(" ")
+
 pts = deque(maxlen=args["buffer"])
 
 # if a video path was not supplied, grab the reference
@@ -49,9 +141,11 @@ if not args.get("video", False):
 # otherwise, grab a reference to the video file
 else:
     camera = cv2.VideoCapture(args["video"])
-
+O()
 # keep looping
 while True:
+    #Current case-> 0: catch ball 1:ball arrival
+    case = 0
     # grab the current frame
     (grabbed, frame) = camera.read()
 
@@ -117,42 +211,47 @@ while True:
     # Find the position of ball in the view of camera
     # the x position of catching ball is 269~309
     # the y position of catching ball is 360
-    Gotcha_pos_left = 269  # x pos
-    Gotcha_pos_right = 309  # x pos
+    Gotcha_pos_left = 180  # x pos
+    Gotcha_pos_right = 460  # x pos
     Gotcha_near = 360  # y pos
     view_width = 480
     view_length = 640
     # Check the x axis of center of ball if it is near the right side
     if center is None:
-        continue
+        R()
     elif center[0] > Gotcha_pos_right:
-        ser.write("L".encode('utf-8'))
-        print("L")
-        time.sleep(1)
+        R()
     # Check if it is near left side
     elif center[0] < Gotcha_pos_left:
-        ser.write("R".encode('utf-8'))
-        print("R")
-        time.sleep(1)
-    
-    """
+        L()
     elif center[0] >= Gotcha_pos_left and center[0] <= Gotcha_pos_right:
-        ser.write("G".encode('utf-8'))
-        if center[1] >= Gotcha_near:
-            ser.write("G".encode('utf-8'))
-            ser.write("O".encode('utf-8'))
+        G()
+        if case == 0 and center[1] >= Gotcha_near:
+            G()
+            G()
+            C()
+            a = b
+            print("Near the target!!")
+            case += 1
+            print("Case: {}".format(case))
+        if case > 1 and radius > 120:
+            O()
+            B()
+            B()
+            B()
+            db = pymysql.connect("localhost", "newuser1", "lab301", "newdb2")
+            cursor = db.cursor()
+            cursor.execute("UPDATE Client_info SET color = 0,send_status = 0 WHERE send_status =1")
+            db.commit()
+            S()
             break
-    """
+
     key = cv2.waitKey(1) & 0xFF
     if center is not None:
         print("Center: {}, Radius: {}".format(center, radius))
     # if the 'q' key is pressed, stop the loop
     if key == ord("q"):
         break
-
-print("Terminated")
-ser.write("S".encode('utf-8'))
-
 # cleanup the camera and close any open windows
 camera.release()
 cv2.destroyAllWindows()

@@ -9,27 +9,26 @@ if (!$link) {
 	exit;
 }
 
-#remote.php?move=&clamp=0
+$usr_no=$_GET["client"];
+$usr_order=$_GET["merchandise"];
+echo "Client no: ";
+echo ($usr_no);
+echo "    Object color:" ;
+echo ($usr_order);
 
-$move_no=$_GET["move"];
-$clamp_no=$_GET["clamp"];
-echo "move no: ";
-echo ($move_no);
-echo "    clamp status:" ;
-echo ($clamp_no);
-
-$query = "UPDATE remote SET Direction = $move_no, Clamp = $clamp_no";
+$query = "UPDATE Client_info SET color = $usr_order WHERE id = $usr_no";
 $result = mysqli_query($link,$query) or trigger_error("Error ". mysqli_error($link));
 
-echo($result);
-echo "type of move_no=" . gettype($move_no) . "type of clamp_no= " . gettype($clamp_no);
-
+$sent = "SELECT send_status FROM Client_info WHERE id = $usr_no";
+$result = mysqli_query($link, $sent) or trigger_error("Error" . mysqli_error($link));
 $row = mysqli_fetch_row($result);
+
 if($row[0]){
-    echo "    remote delivered";
+    echo "    Package delivered";
 }
 else{
-    echo "   fail";
+    echo "    Stop and stare";
 }
+
 mysqli_close($link);
 ?>

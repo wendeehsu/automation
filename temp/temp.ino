@@ -107,7 +107,7 @@ void setup() {
     delay(20);
 }
 
-int cases = 1; //1: looking for ball, 2: facing obstacles, 3: remote control
+int cases = 3; //1: looking for ball, 2: facing obstacles, 3: remote control
 bool clampOpen = true;
 void loop(){
     int a0 = digitalRead(A0);
@@ -118,17 +118,17 @@ void loop(){
     int t1 = 30;
     
     //clamp
-    if(a0 == 0 && a1 == 1 && a2 == 1){  //"O" = CLOSE
+    if(a0 == 0 && a1 == 1 && a2 == 1){  // CLOSE
         myservo.write(180);
         Serial.println("CLOSE");
         cases = 2;
         clampOpen = false;
     }
-    else if(a0 == 1 && a1 == 0 && a2 == 1){ //"C" = open 
-        if(!clampOpen){
+    else if(a0 == 1 && a1 == 0 && a2 == 1){ //open 
+        if(!clampOpen || cases == 3){
             myservo.write(90);  //OPEN
             Serial.println("OPEN");
-        }
+        }       
     }
 
     //moving direction
@@ -139,7 +139,14 @@ void loop(){
         if(cases == 2 && ultraControl(t1)){
             ;
         }else{
+<<<<<<< HEAD
             move(R, L, t-5);        
+=======
+            move(R, L, t-5);
+            if(cases != 3){
+                delay(2000);        
+            }
+>>>>>>> 22ea8b15b319c98468d135107ac5f18c0b58c33a
         }
     }
     else if(a0 == 0 && a1 == 0 && a2 == 1){ //"R"
@@ -149,7 +156,14 @@ void loop(){
         if(cases == 2 && ultraControl(t1)){
             ;
         }else{
+<<<<<<< HEAD
             move(R, L, t-5);        
+=======
+            move(R, L, t-5);  
+            if(cases != 3){
+                delay(2000);        
+            }      
+>>>>>>> 22ea8b15b319c98468d135107ac5f18c0b58c33a
         }
     }
     else if(a0 == 1 && a1 == 0 && a2 == 0){ //"G"
@@ -171,7 +185,5 @@ void loop(){
     else if(a0 == 0 && a1 == 0 && a2 == 0){ //"S"
         Serial.println("stop");
         pause();
-        //L = false;
-        //R = false;
     }
 }

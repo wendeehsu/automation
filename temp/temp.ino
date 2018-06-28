@@ -52,7 +52,7 @@ void move(bool R, bool L,int t){
   for(int i=0; i<t;i++){
     servoControlRIGHT(R);
     servoControlLEFT(L);
-    delay(10);
+    delay(50);
   }
 }
 
@@ -139,8 +139,7 @@ void loop(){
         if(cases == 2 && ultraControl(t1)){
             ;
         }else{
-            move(R, L, t-5);
-            delay(2000);        
+            move(R, L, t-5);        
         }
     }
     else if(a0 == 0 && a1 == 0 && a2 == 1){ //"R"
@@ -150,8 +149,7 @@ void loop(){
         if(cases == 2 && ultraControl(t1)){
             ;
         }else{
-            move(R, L, t-5);  
-            delay(2000);      
+            move(R, L, t-5);        
         }
     }
     else if(a0 == 1 && a1 == 0 && a2 == 0){ //"G"

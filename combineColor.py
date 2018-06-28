@@ -18,6 +18,7 @@ while read:
     time.sleep(1)  #wait for 1 second
     cursor.execute("SELECT color, id FROM Client_info WHERE color != 0")
     row = cursor.fetchone()
+    db.commit()
     if row is not None:
         read = False
         print(row[0], row[1])
@@ -27,6 +28,8 @@ ball_color = {1: "red", 2: "yellow", 3: "green", 4: "blue", 5: "purple"}
 
 a = ball_color[row[0]]
 b = id_color[row[1]]
+print(ball_color[row[0]], id_color[row[1]])
+
 
 # GPIO setup
 GPIO.setmode(GPIO.BOARD)
@@ -40,6 +43,7 @@ def S():
     GPIO.output(pin[1], GPIO.LOW)
     GPIO.output(pin[2], GPIO.LOW)
     print("S")
+    time.sleep(7)
 
 
 def G():
@@ -48,7 +52,7 @@ def G():
     GPIO.output(pin[2], GPIO.LOW)
     time.sleep(1)
     print("G")
-    S()
+    
 
 
 def B():
@@ -57,7 +61,6 @@ def B():
     GPIO.output(pin[2], GPIO.LOW)
     time.sleep(1)
     print("B")
-    S()
 
 
 def L():
@@ -76,6 +79,7 @@ def R():
     time.sleep(1)
     print("R")
     S()
+    
 
 
 def O():
@@ -125,7 +129,7 @@ args = vars(ap.parse_args())
 # ball in the HSV color space, then initialize the list of tracked points
 #get the intended color
 
-a, b = input("Enter : Color of ball and paper\n").split(" ")
+#a, b = input("Enter : Color of ball and paper\n").split(" ")
 
 pts = deque(maxlen=args["buffer"])
 
@@ -137,7 +141,7 @@ if not args.get("video", False):
 # otherwise, grab a reference to the video file
 else:
     camera = cv2.VideoCapture(args["video"])
-
+O()
 # keep looping
 while True:
     #Current case-> 0: catch ball 1:ball arrival
@@ -207,8 +211,8 @@ while True:
     # Find the position of ball in the view of camera
     # the x position of catching ball is 269~309
     # the y position of catching ball is 360
-    Gotcha_pos_left = 240  # x pos
-    Gotcha_pos_right = 400  # x pos
+    Gotcha_pos_left = 180  # x pos
+    Gotcha_pos_right = 460  # x pos
     Gotcha_near = 360  # y pos
     view_width = 480
     view_length = 640
@@ -222,20 +226,25 @@ while True:
         L()
     elif center[0] >= Gotcha_pos_left and center[0] <= Gotcha_pos_right:
         G()
-        if center[1] >= Gotcha_near:
+        if case == 0 and center[1] >= Gotcha_near:
             G()
             G()
-            G()
-            O()
+            C()
             a = b
             print("Near the target!!")
-            if case == 1:
-                B()
-                B()
-                cursor.execute(
-                    "UPDATE Client_info SET color = 0,send_status = 0 WHERE send_status =1"
-                )
             case += 1
+            print("Case: {}".format(case))
+        if case > 1 and radius > 120:
+            O()
+            B()
+            B()
+            B()
+            db = pymysql.connect("localhost", "newuser1", "lab301", "newdb2")
+            cursor = db.cursor()
+            cursor.execute("UPDATE Client_info SET color = 0,send_status = 0 WHERE send_status =1")
+            db.commit()
+            S()
+            break
 
     key = cv2.waitKey(1) & 0xFF
     if center is not None:
@@ -243,7 +252,6 @@ while True:
     # if the 'q' key is pressed, stop the loop
     if key == ord("q"):
         break
-
 # cleanup the camera and close any open windows
 camera.release()
 cv2.destroyAllWindows()

@@ -5,7 +5,7 @@ Servo myservo;  // create servo object to control a servo
 Ultrasonic ultrasonicR(12,13);
 Ultrasonic ultrasonicL(10,11);
 
-int servoRIGHT =5;
+int servoRIGHT = 5;
 int servoLEFT = 9;
 bool R = false;
 bool L = false;
@@ -121,7 +121,7 @@ void loop(){
     if(a0 == 0 && a1 == 1 && a2 == 1){  // CLOSE
         myservo.write(180);
         Serial.println("CLOSE");
-        cases = 2;
+        // cases = 2;
         clampOpen = false;
     }
     else if(a0 == 1 && a1 == 0 && a2 == 1){ //open 
@@ -136,41 +136,36 @@ void loop(){
         Serial.println("turn left");
         L = false;
         R = true;
-        if(cases == 2 && ultraControl(t1)){
+        if(cases == 2){
+          if(ultraControl(t1))
             ;
         }else{
-<<<<<<< HEAD
-            move(R, L, t-5);        
-=======
             move(R, L, t-5);
             if(cases != 3){
                 delay(2000);        
             }
->>>>>>> 22ea8b15b319c98468d135107ac5f18c0b58c33a
         }
     }
     else if(a0 == 0 && a1 == 0 && a2 == 1){ //"R"
         Serial.println("turn right");
         L = true;
         R = false;
-        if(cases == 2 && ultraControl(t1)){
+        if(cases == 2){
+          if(ultraControl(t1))
             ;
         }else{
-<<<<<<< HEAD
-            move(R, L, t-5);        
-=======
             move(R, L, t-5);  
             if(cases != 3){
                 delay(2000);        
             }      
->>>>>>> 22ea8b15b319c98468d135107ac5f18c0b58c33a
         }
     }
     else if(a0 == 1 && a1 == 0 && a2 == 0){ //"G"
         Serial.println("move front");
         L = true;
         R = true;
-        if(cases == 2 && ultraControl(t1)){
+        if(cases == 2){
+          if(ultraControl(t1))
             ;
         }else{
             move(R, L, t);        
